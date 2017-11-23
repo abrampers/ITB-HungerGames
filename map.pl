@@ -61,27 +61,27 @@ printMap(X, Y)   :- mapAt(X, Y, T) ,  print(' '), print(T), print(' '), YY is Y 
 look :-
 	playerLocation(X, Y),
 	A is X - 1, B is Y - 1, C is X + 1, D is Y + 1,
-	print('You\'re in the '), printMapAtType(X, Y), print('. '), 
-	printObjectAt(X, Y),
-	nl,
+	print('Here\'s your surrounding:'), nl, nl,
 	printAt(A, B), printAt(A, Y), printAt(A, D), nl,
 	printAt(X, B), printAt(X, Y), printAt(X, D), nl,
-	printAt(C, B), printAt(C, Y), printAt(C, D).
+	printAt(C, B), printAt(C, Y), printAt(C, D), nl, nl,
+	print('You\'re in a '), printMapAtType(X, Y), print('. '), nl,
+	printObjectAt(X, Y).
 
-printMapAtType(X, Y) :- 
-	mapAt(X, Y, Type), 
+printMapAtType(X, Y) :-
+	mapAt(X, Y, Type),
 	Type == 'F', print('Forest'), !.
 
-printMapAtType(X, Y) :- 
-	mapAt(X, Y, Type), 
+printMapAtType(X, Y) :-
+	mapAt(X, Y, Type),
 	Type == 'O', print('Open Field'), !.
 
-printMapAtType(X, Y) :- 
-	mapAt(X, Y, Type), 
+printMapAtType(X, Y) :-
+	mapAt(X, Y, Type),
 	Type == 'L', print('Lake'), !.
 
-printMapAtType(X, Y) :- 
-	mapAt(X, Y, Type), 
+printMapAtType(X, Y) :-
+	mapAt(X, Y, Type),
 	Type == '#', print('Inaccessible'), !.
 
 appendObjectAt(X, Y, ListOfObjectAt) :- findall(Object, objectAt(X, Y, _, Object), ListOfObjectAt).
@@ -93,7 +93,7 @@ printObjectAt(X, Y) :-
 printObjectList([]) :- !.
 
 printObjectList([Head|Tail]) :-
-	print('You see '), print(Head), print(' on the ground. '),
+	print('There is a '), print(Head), print(' on the ground. '), nl,
 	printObjectList(Tail), !.
 
 
@@ -113,5 +113,5 @@ printAt(X, Y) :- mapAt(X, Y, T), T == 'O', 											print(' - '), !.
 printAt(X, Y) :- mapAt(X, Y, T) ,  print(' '), print(T), print(' '), !.
 
 % Map
-map :- inventory(radar), print('Here\'s your map'), nl, nl, printMap(0, 0), !.
-map :- print('You don\'t have any radar'), !. % Error Message
+map :- inventory(radar), print('Here\'s your map:'), nl, nl, printMap(0, 0), nl, !.
+map :- print('You don\'t have any radar.'), nl, !. % Error Message

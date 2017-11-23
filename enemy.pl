@@ -67,7 +67,7 @@ moveEnemy(Z, 4) :-
 moveEnemy(Z, 4) :- 
 	moveEnemy(Z, 1), !.
 
-moveEnemy(Z, 5) :- !.
+moveEnemy(_, 5) :- !.
 
 % Move EnemyRandom
 moveEnemyRandom(0) :- !.

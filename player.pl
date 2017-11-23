@@ -28,356 +28,369 @@ initPlayer :-
     asserta(playerLocation(X, Y)).
 
 % TAKE
-take(Object) :- 
+take(Object) :-
 	playerLocation(X, Y), objectAt(X, Y, _, Object),
 	asserta(inventory(Object)),
-	print('You\'ve taken '), print(Object), nl,
+	print('You\'ve taken '), print(Object), print('.'), nl,
 	retract(objectAt(X, Y, _, Object)),
 	!.
 
-take(Object) :- 
-	print('There\'s no '), print(Object), print(' here'), nl,
+take(Object) :-
+	print('There\'s no '), print(Object), print(' here.'), nl,
 	!.
 
 % DROP
-drop(Object) :- 
-	inventory(Object), 
+drop(Object) :-
+	inventory(Object),
 	playerLocation(X, Y), object(Type, Object),
 	retract(inventory(Object)),
 	asserta(objectAt(X, Y, Type, Object)),
-	print('You\'ve dropped '), print(Object), nl, 
+	print('You\'ve dropped '), print(Object), print('.'), nl,
 	!.
 
-drop(Object) :- 
-	print('You don\'t have '), print(Object), print(' in your inventory'), nl,
-	!. 
+drop(Object) :-
+	print('You don\'t have '), print(Object), print(' in your inventory.'), nl,
+	!.
 
 % USE
-use(Object) :- 
+use(Object) :-
 	inventory(Object),
 	object(Type, Object),
 	Type == 'food',
 	eat(Object),
-	print('You\'ve eaten '), print(Object), write('. '), nl, 
-	print('Your new Hunger is '), hunger(Hunger), print(Hunger), nl,
+	print('You\'ve eaten '), print(Object), write('. '), nl, nl,
+	print('Your Hunger is now '), hunger(Hunger), print(Hunger), print('.'), nl,
 	retract(inventory(Object)),
-	!. 
+	!.
 
-use(Object) :- 
+use(Object) :-
 	inventory(Object),
 	object(Type, Object),
 	Type == 'medicine',
 	drink(Object),
-	print('You\'ve drunk '), print(Object), write('. '), nl, 
-	print('Your new Health is '), health(Health), print(Health), nl,
+	print('You\'ve drunk '), print(Object), write('. '), nl, nl,
+	print('Your new Health is '), health(Health), print(Health), print('.'), nl,
 	retract(inventory(Object)),
-	!. 
+	!.
 
-use(Object) :- 
+use(Object) :-
 	inventory(Object),
 	object(Type, Object),
 	Type == 'weapon',
-	weapon(AllW), retract(weapon(AllW)),
+	weapon(none), retract(weapon(none)),
 	asserta(weapon(Object)),
-	print('You\'re using '), print(Object), write('. '), nl, 
+	print('You\'re now using '), print(Object), write('. '), nl,
 	retract(inventory(Object)),
-	!. 
+	!.
 
-use(bottle) :- 
+use(Object) :-
+	inventory(Object),
+	object(Type, Object),
+	Type == 'weapon',
+	weapon(AllW), retract(weapon(AllW)), asserta(inventory(AllW)),
+	asserta(weapon(Object)),
+	print('You\'re now using '), print(Object), write('. '), nl,
+	retract(inventory(Object)),
+	!.
+
+use(bottle) :-
 	useBottle,
-	!. 
+	!.
 
-use(Object) :- 
+use(Object) :-
 	inventory(Object),
 	object(Type, Object),
 	Type == 'radar',
-	print('Use command \"map.\" to use radar'), nl,
-	!. 
+	print('Use command \"map.\" to use radar.'), nl,
+	!.
 
-use(Object) :- 
-	print('You don\'t have '), print(Object), print(' in your inventory'), nl,
-	!. 
+use(Object) :-
+	print('You don\'t have '), print(Object), print(' in your inventory.'), nl,
+	!.
 
 % EAT
-eat(Object) :- 
+eat(Object) :-
 	Object == 'mieaceh',
 	hunger(Hunger), NewHunger is Hunger + 50, NewHunger > 100,
 	retract(hunger(Hunger)), asserta(hunger(100)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'mieaceh',
 	hunger(Hunger), NewHunger is Hunger + 50,
 	retract(hunger(Hunger)), asserta(hunger(NewHunger)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'sotomedan',
 	hunger(Hunger), NewHunger is Hunger + 40, NewHunger > 100,
 	retract(hunger(Hunger)), asserta(hunger(100)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'sotomedan',
 	hunger(Hunger), NewHunger is Hunger + 40,
 	retract(hunger(Hunger)), asserta(hunger(NewHunger)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'rendang',
 	hunger(Hunger), NewHunger is Hunger + 30, NewHunger > 100,
 	retract(hunger(Hunger)), asserta(hunger(100)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'rendang',
 	hunger(Hunger), NewHunger is Hunger + 30,
 	retract(hunger(Hunger)), asserta(hunger(NewHunger)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'martabak',
 	hunger(Hunger), NewHunger is Hunger + 20, NewHunger > 100,
 	retract(hunger(Hunger)), asserta(hunger(100)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'martabak',
 	hunger(Hunger), NewHunger is Hunger + 20,
 	retract(hunger(Hunger)), asserta(hunger(NewHunger)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'pempek',
 	hunger(Hunger), NewHunger is Hunger + 10, NewHunger > 100,
 	retract(hunger(Hunger)), asserta(hunger(100)), !.
 
-eat(Object) :- 
+eat(Object) :-
 	Object == 'pempek',
 	hunger(Hunger), NewHunger is Hunger + 10,
 	retract(hunger(Hunger)), asserta(hunger(NewHunger)), !.
 
 % DRINK
-drink(Object) :- 
-	Object == 'lidah buaya',
+drink(Object) :-
+	Object == 'lidahbuaya',
 	health(Health), NewHealth is Health + 50, NewHealth > 100,
 	retract(health(Health)), asserta(health(100)), !.
 
-drink(Object) :- 
-	Object == 'lidah buaya',
+drink(Object) :-
+	Object == 'lidahbuaya',
 	health(Health), NewHealth is Health + 50,
 	retract(health(Health)), asserta(health(NewHealth)), !.
 
-drink(Object) :- 
+drink(Object) :-
 	Object == 'cincau',
 	health(Health), NewHealth is Health + 40, NewHealth > 100,
 	retract(health(Health)), asserta(health(100)), !.
 
-drink(Object) :- 
+drink(Object) :-
 	Object == 'cincau',
 	health(Health), NewHealth is Health + 40,
 	retract(health(Health)), asserta(health(NewHealth)), !.
 
-drink(Object) :- 
+drink(Object) :-
 	Object == 'temulawak',
 	health(Health), NewHealth is Health + 30, NewHealth > 100,
 	retract(health(Health)), asserta(health(100)), !.
 
-drink(Object) :- 
+drink(Object) :-
 	Object == 'temulawak',
 	health(Health), NewHealth is Health + 30,
 	retract(health(Health)), asserta(health(NewHealth)), !.
 
-drink(Object) :- 
+drink(Object) :-
 	Object == 'kumiskucing',
 	health(Health), NewHealth is Health + 20, NewHealth > 100,
 	retract(health(Health)), asserta(health(100)), !.
 
-drink(Object) :- 
+drink(Object) :-
 	Object == 'kumiskucing',
 	health(Health), NewHealth is Health + 20,
 	retract(health(Health)), asserta(health(NewHealth)), !.
 
-drink(Object) :- 
+drink(Object) :-
 	Object == 'jahe',
 	health(Health), NewHealth is Health + 10, NewHealth > 100,
 	retract(health(Health)), asserta(health(100)), !.
 
-drink(Object) :- 
+drink(Object) :-
 	Object == 'jahe',
 	health(Health), NewHealth is Health + 10,
 	retract(health(Health)), asserta(health(NewHealth)), !.
 
 % Use Bottle
-useBottle :- 
+useBottle :-
 	playerLocation(X, Y), mapAt(X, Y, Type),
 	Type == 'L', thirst(Thirst), bottle(Bottle),
 	retract(thirst(Thirst)), asserta(thirst(100)),
 	retract(bottle(Bottle)), asserta(bottle(full)),
-	write('You\'ve filled the bottle.'), nl, 
-	print('Your new Thirst is 100'), nl,
+	write('You\'ve filled your bottle.'), nl, nl,
+	print('Your new Thirst is 100.'), nl,
 	!.
 
-useBottle :- 
+useBottle :-
 	bottle(full), thirst(Thirst), bottle(Bottle),
 	retract(thirst(Thirst)), NewThirst is Thirst + 50, NewThirst > 100, asserta(thirst(100)),
 	retract(bottle(Bottle)), asserta(bottle(empty)),
-	print('Your new Thirst is '), thirst(Thirst), print(Thirst), nl,
+	print('Your Thirst is now '), thirst(Thirst), print(Thirst), print('.'), nl, nl,
 	print('Your bottle is now empty'), nl,
 	!.
 
-useBottle :- 
+useBottle :-
 	bottle(full), thirst(Thirst), bottle(Bottle),
 	retract(thirst(Thirst)), NewThirst is Thirst + 50, asserta(thirst(NewThirst)),
 	retract(bottle(Bottle)), asserta(bottle(empty)),
-	print('Your new Thirst is '), thirst(Thirst), print(Thirst), nl,
+	print('Your Thirst is now '), thirst(Thirst), print(Thirst), print('.'), nl, nl,
 	print('Your bottle is now empty'), nl,
 	!.
 
-useBottle :- 
-	print('Your bottle is empty, You can\'t drink'), nl,
-	!. 
-
-
-
+useBottle :-
+	print('Your bottle is empty, you can\'t drink.'), nl,
+	!.
 
 % Attack
-attack :- 
+attack :-
 	playerLocation(X, Y),
-	enemyAt(X, Y, Z), 
+	enemyAt(X, Y, Z),
 	weapon('rencong'),
 	health(Health), NewHealth is Health - 10,
-	NewHealth > 0, 
+	NewHealth > 0,
 	retract(health(Health)), asserta(health(NewHealth)),
 	retract(enemyAt(X, Y, Z)),
 	retract(totalEnemy(Tot)),
 	NewTot is Tot - 1,
 	asserta(totalEnemy(NewTot)),
-	print('You\'ve killed an enemy. Your Health is '), print(NewHealth), nl,
-	print(NewTot), print(' enemies left'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, _), 
-	weapon('rencong'),
-	health(Health), 
-	retract(health(Health)), asserta(health(0)),
-	print('You\'re dead'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, Z), 
-	weapon('badik'),
-	health(Health), NewHealth is Health - 20,
-	NewHealth > 0, 
-	retract(health(Health)), asserta(health(NewHealth)),
-	retract(enemyAt(X, Y, Z)),
-	retract(totalEnemy(Tot)),
-	NewTot is Tot - 1,
-	asserta(totalEnemy(NewTot)),
-	print('You\'ve killed an enemy. Your Health is '), print(NewHealth), nl,
-	print(NewTot), print(' enemies left'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, _), 
-	weapon('badik'),
-	health(Health), 
-	retract(health(Health)), asserta(health(0)),
-	print('You\'re dead'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, Z), 
-	weapon('kujang'),
-	health(Health), NewHealth is Health - 30,
-	NewHealth > 0, 
-	retract(health(Health)), asserta(health(NewHealth)),
-	retract(enemyAt(X, Y, Z)),
-	retract(totalEnemy(Tot)),
-	NewTot is Tot - 1,
-	asserta(totalEnemy(NewTot)),
-	print('You\'ve killed an enemy. Your Health is '), print(NewHealth), nl,
-	print(NewTot), print(' enemies left'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, _), 
-	weapon('kujang'),
-	health(Health), 
-	retract(health(Health)), asserta(health(0)),
-	print('You\'re dead'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, Z), 
-	weapon('keris'),
-	health(Health), NewHealth is Health - 40,
-	NewHealth > 0, 
-	retract(health(Health)), asserta(health(NewHealth)),
-	retract(enemyAt(X, Y, Z)),
-	retract(totalEnemy(Tot)),
-	NewTot is Tot - 1,
-	asserta(totalEnemy(NewTot)),
-	print('You\'ve killed an enemy. Your Health is '), print(NewHealth), nl,
-	print(NewTot), print(' enemies left'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, _), 
-	weapon('keris'),
-	health(Health), 
-	retract(health(Health)), asserta(health(0)),
-	print('You\'re dead'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, Z), 
-	weapon('celurit'),
-	health(Health), NewHealth is Health - 50,
-	NewHealth > 0, 
-	retract(health(Health)), asserta(health(NewHealth)),
-	retract(enemyAt(X, Y, Z)),
-	retract(totalEnemy(Tot)),
-	NewTot is Tot - 1,
-	asserta(totalEnemy(NewTot)),
-	print('You\'ve killed an enemy. Your Health is '), print(NewHealth), nl,
-	print(NewTot), print(' enemies left'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, _), 
-	weapon('celurit'),
-	health(Health), 
-	retract(health(Health)), asserta(health(0)),
-	print('You\'re dead'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, Z), 
-	health(Health), NewHealth is Health - 60,
-	NewHealth > 0, 
-	retract(health(Health)), asserta(health(NewHealth)),
-	retract(enemyAt(X, Y, Z)),
-	retract(totalEnemy(Tot)),
-	NewTot is Tot - 1,
-	asserta(totalEnemy(NewTot)),
-	print('You\'ve killed an enemy. Your Health is '), print(NewHealth), nl,
-	print(NewTot), print(' enemies left'), nl,
-	!. 
-
-attack :- 
-	playerLocation(X, Y),
-	enemyAt(X, Y, _), 
-	health(Health), 
-	retract(health(Health)), asserta(health(0)),
-	print('You\'re dead'), nl,
-	!. 
+    print('You\'ve killed an enemy.'), nl, nl,
+    print('Your Health is now '), print(NewHealth), print('.'), nl,
+	print('There are '), print(NewTot), print(' enemies left.'), nl,
+	!.
 
 attack :-
-	print('There\'s no enemy nearby'), nl,
+	playerLocation(X, Y),
+	enemyAt(X, Y, _),
+	weapon('rencong'),
+	health(Health),
+	retract(health(Health)), asserta(health(0)),
+	print('You\'re dead.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, Z),
+	weapon('badik'),
+	health(Health), NewHealth is Health - 20,
+	NewHealth > 0,
+	retract(health(Health)), asserta(health(NewHealth)),
+	retract(enemyAt(X, Y, Z)),
+	retract(totalEnemy(Tot)),
+	NewTot is Tot - 1,
+	asserta(totalEnemy(NewTot)),
+    print('You\'ve killed an enemy.'), nl, nl,
+    print('Your Health is now '), print(NewHealth), print('.'), nl,
+	print('There are '), print(NewTot), print(' enemies left.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, _),
+	weapon('badik'),
+	health(Health),
+	retract(health(Health)), asserta(health(0)),
+	print('You\'re dead.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, Z),
+	weapon('kujang'),
+	health(Health), NewHealth is Health - 30,
+	NewHealth > 0,
+	retract(health(Health)), asserta(health(NewHealth)),
+	retract(enemyAt(X, Y, Z)),
+	retract(totalEnemy(Tot)),
+	NewTot is Tot - 1,
+	asserta(totalEnemy(NewTot)),
+    print('You\'ve killed an enemy.'), nl, nl,
+    print('Your Health is now '), print(NewHealth), print('.'), nl,
+	print('There are '), print(NewTot), print(' enemies left.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, _),
+	weapon('kujang'),
+	health(Health),
+	retract(health(Health)), asserta(health(0)),
+	print('You\'re dead.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, Z),
+	weapon('keris'),
+	health(Health), NewHealth is Health - 40,
+	NewHealth > 0,
+	retract(health(Health)), asserta(health(NewHealth)),
+	retract(enemyAt(X, Y, Z)),
+	retract(totalEnemy(Tot)),
+	NewTot is Tot - 1,
+	asserta(totalEnemy(NewTot)),
+    print('You\'ve killed an enemy.'), nl, nl,
+    print('Your Health is now '), print(NewHealth), print('.'), nl,
+	print('There are '), print(NewTot), print(' enemies left.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, _),
+	weapon('keris'),
+	health(Health),
+	retract(health(Health)), asserta(health(0)),
+	print('You\'re dead.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, Z),
+	weapon('celurit'),
+	health(Health), NewHealth is Health - 50,
+	NewHealth > 0,
+	retract(health(Health)), asserta(health(NewHealth)),
+	retract(enemyAt(X, Y, Z)),
+	retract(totalEnemy(Tot)),
+	NewTot is Tot - 1,
+	asserta(totalEnemy(NewTot)),
+    print('You\'ve killed an enemy.'), nl, nl,
+    print('Your Health is now '), print(NewHealth), print('.'), nl,
+	print('There are '), print(NewTot), print(' enemies left.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, _),
+	weapon('celurit'),
+	health(Health),
+	retract(health(Health)), asserta(health(0)),
+	print('You\'re dead.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, Z),
+	health(Health), NewHealth is Health - 60,
+	NewHealth > 0,
+	retract(health(Health)), asserta(health(NewHealth)),
+	retract(enemyAt(X, Y, Z)),
+	retract(totalEnemy(Tot)),
+	NewTot is Tot - 1,
+	asserta(totalEnemy(NewTot)),
+	print('You\'ve killed an enemy.'), nl, nl,
+    print('Your Health is now '), print(NewHealth), print('.'), nl,
+	print('There are '), print(NewTot), print(' enemies left.'), nl,
+	!.
+
+attack :-
+	playerLocation(X, Y),
+	enemyAt(X, Y, _),
+	health(Health),
+	retract(health(Health)), asserta(health(0)),
+	print('You\'re dead.'), nl,
+	!.
+
+attack :-
+	print('There\'s no enemy nearby.'), nl,
 	!.
 
 
@@ -385,13 +398,15 @@ attack :-
 appendInventory(ListOfInventory) :- findall(X, inventory(X), ListOfInventory).
 
 % Print Inventory
-printInventory([Head|Tail]) :- 
+printInventory([Head|Tail]) :-
 	print('  '), print(Head), nl,
 	printInventory(Tail),
 	!.
 
+inventory(radar).
+
 % Status
-status :- 
+status :-
 	health(Health), thirst(Thrist), hunger(Hunger), weapon(Weapon),
 	print('Health    : '), print(Health), nl,
 	print('Hunger    : '), print(Hunger), nl,

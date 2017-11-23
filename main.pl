@@ -23,29 +23,107 @@
 % Commands
 start :-
     initGame,
-    print('Welcome to the 77th Hunger Games!'), nl,
+    print('                  .NND                                      '), nl,
+    print('                 ZNDDN. =8NNDDDNNNI...                      '), nl,
+    print('               .NDNDDDDNNDDDDDDDDDDNDNDNM..                 '), nl,
+    print('              7DNDDDDDDDDDDDDDDDDDDDDDDDDNDDN.              '), nl,
+    print('             NDDDDDDDDN?....   .  ...DDDDDDDDNN7.           '), nl,
+    print('           .DDDDDDDDDD7              . ..,DDDDDDND.     .   '), nl,
+    print('         .DDDDDDDDDDDDN.                 . .,DDDDDD..,NN.   '), nl,
+    print('        $DNDDDDDDDDDDDD.                      .NDDDDDDD.    '), nl,
+    print('      .DNDDDDDDDDDDDDDD                        .NDDDDD.     '), nl,
+    print('    ..NDDDDDDDDDDDDDDDD                     ..DDNDDDDDN     '), nl,
+    print('    .DDDDDDDDDDDDDDDDDDDN               ...,DNDDDDDDDDDD.   '), nl,
+    print('   .DDDDDDDDDDDDDDDDDDDDDD.        .~NDDDDDNDDNN.  .NNDDD   '), nl,
+    print('   8DDDD~DDDDDDDDDDDDDDDDDN     ~DDDNDDDDDDDD  .   . DDDDD  '), nl,
+    print('   DDDD..DDDDDDDDDDDDDDDDDDD.MNDDDDDDDDDDDD.        ..DDDN. '), nl,
+    print('  NDDD$.  8DDDDDDDDDDDDDDDDDDNDDDDDDDDDDDN..          $DDNN.'), nl,
+    print(' .DDDD..   .:DDDDDDDDDDDDDDDDDDDDDDDDDDDN             .DDDN.'), nl,
+    print(' :DDNN        .DDDDDDDDDDDDDDDDDDDDDDDDD.              NDDD.'), nl,
+    print(' DNDD8 .       $DDDDDDDDDDDDDDDDDDDDNN..              .+DDDI'), nl,
+    print(' NNDDI         DDDDDDDDDDDDDDDDDDDDDD.              ..~NDDDO'), nl,
+    print('.NNDD?     7 .DNDDDDDDDDDDDDDDDDDDD.              .NDDM.DDD8'), nl,
+    print(' NDDNO.   .DDDDDDDDDDDDDDDDDDDDDDD.              DNDDNNDNDD7'), nl,
+    print(' 8DDDN    7DDDDDDDDDDDDDDDDDDDDDDD7.          ..DDDDNI.?DDD.'), nl,
+    print(' .NDND.  .NDDDDDDNNNNDDDDDDDDDDDDDDDN.     DNND        NNDD '), nl,
+    print(' .DDDN..  DDDDDDDN?       .8DDDDDDDDNND..DNDD+         NDDD.'), nl,
+    print(' .ODDDD   +DDDDDDDN        ..NDDDDDDDDNDD..          .NDDD7 '), nl,
+    print('  .DDDN:    DDDDDND.        . .MDDDDDDDDD?.         ..DDDD. '), nl,
+    print('   .DDDD      ZDDDDD         ..NDDDDDDDDDN+         .NDDDZ  '), nl,
+    print('    DNDDD .   ...DNDN.    .ZDN  DDDDDDDDDNNZ       .DNDDD . '), nl,
+    print('    .DDDDD.       .NDN. 7D8. .  NDDDNDNDDDDNI.    .NDDDD    '), nl,
+    print('      DNDDN        .ZDNN ..    NDDD. .  .7DDDO  .~DDDDD.    '), nl,
+    print('       MNDDND.  .=D...MN8     .DDZ.       .NDNZ.NDDDNN..    '), nl,
+    print('        ?DDDNDDDN..   . NN    .D. .         .DDDDDDDD.      '), nl,
+    print('         .NDDDDDD..                        .DDDDDDD         '), nl,
+    print('   ..DDDD~..DDDDDDNN..                . .NDDDDDDDNN         '), nl,
+    print('  .DDNDD    .:NDDDDDNDDNDNI...  ..=8NDDDDDDDDDDZ...N.       '), nl,
+    print('~DN~.. ..     ..8DDDDDDDDDDDDDDDDDDDDDDDDDDDN  .            '), nl,
+    print('                . . ODDNDDDDDDDDDDDDDNNDD...                '), nl,
+    print('                       ....=$O88Z+...... '), nl, nl, nl,
+    print('Welcome to the 77th Hunger Games!'), nl, nl,
     print('What\'s your name? '), nl,
+    print('>>> '),
     read(Name),
     player(D),
     retract(player(D)),
     asserta(player(Name)),
-    welcome_screen, nl, nl.
-    repeat
-        write('> '),
-        read(Input),
-        do(Input),
-        end_condition(Input).
+    welcome_screen,
+    repeat,
+        nl,
+        write('Enter your command:'), nl,
+        write('>>> '),
+        read(Input), nl,
+        print('====================================================================================================='), nl, nl,
+        isInput(Input),
+        call(Input),
+    end, !.
     % TODO: Game
 
-do() :- panggil move
+isInput(listing) :- !.%nl, write('DO NOT CHEAT!'), nl, !, fail.
+
+isInput(help) :- !.
+isInput(quit) :- !.
+isInput(q) :- !.
+isInput(look) :- !.
+isInput(map) :- !.
+isInput(n) :- !.
+isInput(s) :- !.
+isInput(e) :- !.
+isInput(w) :- !.
+isInput(take(_)) :- !.
+isInput(use(_)) :- !.
+isInput(drop(_)) :- !.
+isInput(attack) :- !.
+isInput(status) :- !.
+isInput(save) :- !.
+isInput(load) :- !.
+
+%% isInput(_) :- nl, write('WRONG INPUT'),  fail, !.
+
 
 end :-
-    health(0), write('Kamu kalah'), 
-    halt, !.
+    health(X), X =< 0,
+    write('Enemy killed you!'),
+    !.
 
 end :-
+    hunger(X), X =< 0,
+    write('You starved to death!'),
+    !.
 
-initGame :- 
+end :-
+    thirst(X), X =< 0,
+    write('You died of thirst!'),
+    !.
+
+end :-
+    totalEnemy(X), X =< 0,
+    write('You\'ve killed all the enemies!'),
+    !.
+
+
+initGame :-
     initPlayer,
     makeMap,
     initObject,
@@ -53,43 +131,49 @@ initGame :-
     asserta(totalEnemy(11)).
 
 help :-
-    print('These are some commands you may use'), nl,
-    print('help.           -- show available commands ') , nl,
-    print('quit.           -- quit the game ') , nl,
-    print('look.           -- look around you ') , nl,
-    print('n. s. e. w.     -- move ') , nl,
-    print('map.            -- look at the map and detect enemies (need radar to use) ') , nl,
-    print('take(Object).   -- pick up an object ') , nl,
-    print('drop(Object).   -- drop an object ') , nl,
-    print('use(Object).    -- use an object ') , nl,
-    print('attack.         -- attack enemy that crosses your path ') , nl,
-    print('status.         -- show your status ') , nl,
-    print('save(Filename). -- save your game ') , nl,
-    print('load(Filename). -- load previously saved game ') , nl, nl,
-    print('Legends: ') , nl,
-    print('P = player ') , nl,
-    print('E = enemy ') , nl,
-    print('m = medicine ') , nl,
-    print('f = food ') , nl,
-    print('w = weapon ') , nl,
-    print('+ = Forest ') , nl,
-    print('* = Lake ') , nl,
-    print('- = Open Field ') , nl,
-    print('# = Inaccessible  ') , nl,
-    print('Happy Hunger Games! And may the odds be ever in your favor.') , nl , nl.
+    print('+-----------------------------------------------------------------------------+'), nl,
+    print('| These are some commands you can use to progress through the game:           |'), nl,
+    print('+-----------------------------------------------------------------------------+'), nl,
+    print('| help.           | show available commands                                   |'), nl,
+    print('| quit.           | quit the game                                             |'), nl,
+    print('| look.           | look around you                                           |'), nl,
+    print('| n. s. e. w.     | move                                                      |'), nl,
+    print('| map.            | look at the map and detect enemies (need radar to use)    |'), nl,
+    print('| take(Object).   | pick up an object                                         |'), nl,
+    print('| drop(Object).   | drop an object                                            |'), nl,
+    print('| use(Object).    | use an object                                             |'), nl,
+    print('| attack.         | attack enemy that crosses your path                       |'), nl,
+    print('| status.         | show your status                                          |'), nl,
+    print('| save.           | save your game                                            |'), nl,
+    print('| load.           | load previously saved game                                |'), nl,
+    print('+-----------------------------------------------------------------------------+'), nl,
 
-quit :- halt. % TODO:
+    print('+--------------------+'), nl,
+    print('| Map legends:       |'), nl,
+    print('+--------------------+'), nl,
+    print('| P | Player         |'), nl,
+    print('| E | Enemy          |'), nl,
+    print('| m | Medicine       |'), nl,
+    print('| f | Food           |'), nl,
+    print('| w | Weapon         |'), nl,
+    print('| r | Radar          |'), nl,
+    print('| b | Bottle         |'), nl,
+    print('| + | Forest         |'), nl,
+    print('| * | Lake           |'), nl,
+    print('| - | Open Field     |'), nl,
+    print('| # | Inaccessible   |'), nl,
+    print('+--------------------+'), nl.
 
-q :- quit. % TODO:
+quit :- halt.
 
-save :- 
-    %% print('Masukkan nama file: '),
-    %% read(NamaFile),
-    open('a.txt', write, Data),
+q :- quit.
+
+save :-
+    open('a.pl', write, Data),
     player(PlayerName),
     write(Data, player(PlayerName)), write(Data, '.'), nl(Data),
     playerLocation(CoordX, CoordY),
-    write(Data, playerLocation(CoordX, CoordY)), write('.'), nl(Data),
+    write(Data, playerLocation(CoordX, CoordY)), write(Data, '.'), nl(Data),
     health(Health),
     write(Data, health(Health)), write(Data, '.'), nl(Data),
     hunger(Hunger),
@@ -104,10 +188,59 @@ save :-
     forall(objectAt(W, X, Y, Z), (write(Data, objectAt(W, X, Y, Z)), write(Data, '.'), nl(Data))),
     forall(enemyAt(E, F, G), (write(Data, enemyAt(E, F, G)), write(Data, '.'), nl(Data))),
     close(Data),
-    nl, print('You\'ve saved the game!')
-    , !.
+    nl, print('You\'ve saved the game!'), nl,
+    !.
 
-loads :- 
+load :-
+    consult('a.pl'),
+    print('You\'ve load the game.'), nl, !.
+
+readFacts(Data) :-
+    repeat,
+        read(Data, X),
+        asserta(X),
+        at_end_of_stream(Data).
+
+welcome_screen :-
+    nl,
+    print('+-----------------------------------------------------------------------------+'), nl,
+    print('| These are some commands you can use to progress through the game:           |'), nl,
+    print('+-----------------------------------------------------------------------------+'), nl,
+    print('| help.           | show available commands                                   |'), nl,
+    print('| quit.           | quit the game                                             |'), nl,
+    print('| look.           | look around you                                           |'), nl,
+    print('| n. s. e. w.     | move                                                      |'), nl,
+    print('| map.            | look at the map and detect enemies (need radar to use)    |'), nl,
+    print('| take(Object).   | pick up an object                                         |'), nl,
+    print('| drop(Object).   | drop an object                                            |'), nl,
+    print('| use(Object).    | use an object                                             |'), nl,
+    print('| attack.         | attack enemy that crosses your path                       |'), nl,
+    print('| status.         | show your status                                          |'), nl,
+    print('| save.           | save your game                                            |'), nl,
+    print('| load.           | load previously saved game                                |'), nl,
+    print('+-----------------------------------------------------------------------------+'), nl,
+
+    print('+--------------------+'), nl,
+    print('| Map legends:       |'), nl,
+    print('+--------------------+'), nl,
+    print('| P | Player         |'), nl,
+    print('| E | Enemy          |'), nl,
+    print('| m | Medicine       |'), nl,
+    print('| f | Food           |'), nl,
+    print('| w | Weapon         |'), nl,
+    print('| r | Radar          |'), nl,
+    print('| b | Bottle         |'), nl,
+    print('| + | Forest         |'), nl,
+    print('| * | Lake           |'), nl,
+    print('| - | Open Field     |'), nl,
+    print('| # | Inaccessible   |'), nl,
+    print('+--------------------+'), nl, nl,
+
+    print('You have been chosen as one of the lucky contestants. Be the last man standing and you'), nl,
+    print('will be remembered as one of the victors.'),nl, nl,
+    print('Happy Hunger Games! And may the odds be ever in your favor!'), nl.
+
+bersih :-
     %% inventory(_),
     %% retractall(inventory(_)),
     weapon(Weapon),
@@ -127,45 +260,4 @@ loads :-
     objectAt(_, _, _, _),
     retractall(objectAt(_, _, _, _)),
     enemyAt(_, _, _),
-    retractall(enemyAt(_, _, _)),
-    print('Masukkan nama file: '),
-    open('a.txt', read, Data),
-    readFacts(Data),
-    close(Data),
-    nl, print('You\'ve load the game!'), !.
-
-readFacts(Data) :-
-    repeat,
-        read(Data, X),
-        asserta(X),
-        at_end_of_stream(Data).
-
-welcome_screen :-
-    nl,
-    print('You have been chosen as one of the lucky contestants. Be the last man standing and you will be remembered as one of the victors.'),nl, nl,
-    print('These are some commands you may use'), nl,
-    print('help.           -- show available commands ') , nl,
-    print('quit.           -- quit the game ') , nl,
-    print('look.           -- look around you ') , nl,
-    print('n. s. e. w.     -- move ') , nl,
-    print('map.            -- look at the map and detect enemies (need radar to use) ') , nl,
-    print('take(Object).   -- pick up an object ') , nl,
-    print('drop(Object).   -- drop an object ') , nl,
-    print('use(Object).    -- use an object ') , nl,
-    print('attack.         -- attack enemy that crosses your path ') , nl,
-    print('status.         -- show your status ') , nl,
-    print('save(Filename). -- save your game ') , nl,
-    print('load(Filename). -- load previously saved game ') , nl, nl,
-    print('Legends: ') , nl,
-    print('P = Player ') , nl,
-    print('E = Enemy ') , nl,
-    print('m = Medicine ') , nl,
-    print('f = Food ') , nl,
-    print('w = Weapon ') , nl,
-    print('r = Radar ') , nl,
-    print('b = Bottle ') , nl,
-    print('+ = Forest ') , nl,
-    print('* = Lake ') , nl,
-    print('- = Open Field ') , nl,
-    print('# = Inaccessible  ') , nl,
-    print('Happy Hunger Games! And may the odds be ever in your favor.') , nl , nl.
+    retractall(enemyAt(_, _, _)).
